@@ -17,7 +17,14 @@ const checkRole = require('../middlewares/role.middleware');
 router.get('/', verifyToken, checkRole('admin', 'analyst'), getRecords);
 
 // Only Admin can modify
-router.post('/', verifyToken, checkRole('admin'), createRecord);
+router.post('/', verifyToken, checkRole('admin'),
+ [
+    body('amount').isNumeric(),
+    body('type').isIn(['income', 'expense']),
+    body('category').notEmpty()
+  ],
+  validate, createRecord);
+  
 router.put('/:id', verifyToken, checkRole('admin'), updateRecord);
 router.delete('/:id', verifyToken, checkRole('admin'), deleteRecord);
 

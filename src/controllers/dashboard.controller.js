@@ -1,4 +1,4 @@
-const Record = require('../models/record.model');
+const Record = require('../models/Record');
 
 exports.getSummary = async (req, res) => {
   try {

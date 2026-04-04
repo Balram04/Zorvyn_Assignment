@@ -8,8 +8,8 @@ const {
   getRecentActivity
 } = require('../controllers/dashboard.controller');
 
-const verifyToken = require('../middleware/auth.middleware');
-const checkRole = require('../middleware/role.middleware');
+const verifyToken = require('../middlewares/auth.middleware');
+const checkRole = require('../middlewares/role.middleware');
 
 
 // Analyst + Admin can access dashboard
