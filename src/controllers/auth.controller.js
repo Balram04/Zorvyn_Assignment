@@ -6,7 +6,8 @@ const jwt = require('jsonwebtoken');
 // REGISTER
 exports.register = async (req, res) => {
   try {
-    const { name, email, password, role = 'viewer' } = req.body;
+    const { name, email, password } = req.body;
+    const role = 'viewer';
 
     if (!name || !email || !password) {
       return res.status(400).json({ message: "Name, email, and password are required" });
@@ -72,8 +73,28 @@ exports.login = async (req, res) => {
       { expiresIn: '1d' }
     );
 
-    res.json({ token });
+    res.cookie('token', token, {
+      httpOnly: true,
+      sameSite: 'strict',
+      maxAge: 24 * 60 * 60 * 1000
+    });
 
+    res.json({
+      message: 'Login successful',
+      token,
+      user: { id: user._id, email: user.email, role: user.role }
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// LOGOUT
+exports.logout = async (req, res) => {
+  try {
+    res.clearCookie('token');
+    res.json({ message: 'Logged out successfully' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

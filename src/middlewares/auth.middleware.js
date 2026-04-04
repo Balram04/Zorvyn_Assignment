@@ -1,13 +1,17 @@
 const jwt = require('jsonwebtoken');
 
 const verifyToken = (req, res, next) => {
-  const token = req.headers.authorization;
+  const bearerToken = req.headers.authorization;
+  const tokenFromHeader = bearerToken && bearerToken.startsWith('Bearer ')
+    ? bearerToken.split(' ')[1]
+    : null;
+  const token = req.cookies.token || tokenFromHeader;
 
   if (!token) {
     return res.status(401).json({ message: "No token provided" });
   }
   try {
-    const decoded = jwt.verify(token.split(" ")[1], process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded;
     next();
   } catch (error) {

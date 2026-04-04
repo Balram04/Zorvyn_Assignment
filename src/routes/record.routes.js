@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const { body } = require('express-validator');
+const validate = require('../middlewares/validate.middleware');
 
 const {
   createRecord,
@@ -24,7 +26,7 @@ router.post('/', verifyToken, checkRole('admin'),
     body('category').notEmpty()
   ],
   validate, createRecord);
-  
+
 router.put('/:id', verifyToken, checkRole('admin'), updateRecord);
 router.delete('/:id', verifyToken, checkRole('admin'), deleteRecord);
 
