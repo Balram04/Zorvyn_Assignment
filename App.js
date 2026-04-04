@@ -2,6 +2,7 @@ const express = require('express');
 const connectDB = require('./src/config/db');
 require('dotenv').config();
 const authRoutes = require('./src/routes/auth.routes');
+const recordRoutes = require('./src/routes/record.routes');
 
 const app = express();
 
@@ -12,6 +13,7 @@ app.get('/health', (req, res) => {
 });
 // Routes
 app.use('/auth', authRoutes);
+app.use('/records', recordRoutes);
 
 
 

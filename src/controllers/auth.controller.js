@@ -6,7 +6,11 @@ const jwt = require('jsonwebtoken');
 // REGISTER
 exports.register = async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role = 'viewer' } = req.body;
+
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: "Name, email, and password are required" });
+    }
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -22,7 +26,16 @@ exports.register = async (req, res) => {
       role
     });
 
-    res.status(201).json({ message: "User registered successfully", user });
+    const safeUser = {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      isActive: user.isActive,
+      createdAt: user.createdAt
+    };
+
+    res.status(201).json({ message: "User registered successfully", user: safeUser });
 
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -35,9 +48,17 @@ exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    if (!email || !password) {
+      return res.status(400).json({ message: "Email and password are required" });
+    }
+
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(400).json({ message: "Invalid credentials" });
+    }
+
+    if (!user.isActive) {
+      return res.status(403).json({ message: "User is inactive" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);

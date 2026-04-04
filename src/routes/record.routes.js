@@ -8,8 +8,8 @@ const {
   deleteRecord
 } = require('../controllers/record.controller');
 
-const verifyToken = require('../middleware/auth.middleware');
-const checkRole = require('../middleware/role.middleware');
+const verifyToken = require('../middlewares/auth.middleware');
+const checkRole = require('../middlewares/role.middleware');
 
 
 // Viewer  → cannot access records
