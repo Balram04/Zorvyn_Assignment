@@ -46,6 +46,29 @@ src/
 | Analyst | View records & dashboard |
 | Admin   | Manage all records & users |
 
+## First Admin Setup
+
+Public register creates a user with viewer role by default.
+
+Use this one-time bootstrap flow:
+1. Register a normal user from POST /api/auth/register
+2. Promote that user to admin directly in database
+3. Login with that account
+4. Use admin APIs to manage other users and roles
+
+Example Mongo update:
+
+```js
+db.users.updateOne(
+  { email: "your-admin-email@example.com" },
+  { $set: { role: "admin" } }
+)
+```
+
+Security note:
+- Keep public register role fixed to viewer
+- Do not hardcode real emails, passwords, or secrets in README
+
 ## API Quick Reference
 
 | Endpoint | Method | Auth | Role |
