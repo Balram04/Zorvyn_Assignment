@@ -1,13 +1,13 @@
 const express = require('express');
 const connectDB = require('./src/config/db');
 require('dotenv').config();
-const authRoutes = require('./routes/auth.routes');
+const authRoutes = require('./src/routes/auth.routes');
 
 const app = express();
 
 app.use(express.json());
 //health
-app.get('/api/health', (req, res) => {
+app.get('/health', (req, res) => {
   res.json({ status: 'ok', message: 'Zorvyn Assignment API is running' });
 });
 // Routes

@@ -1,4 +1,88 @@
-install the enviroment and setup the folder stucture 
-define the data models for user and transaction 
-wirte the db connection logic into config via mongoose ODM
+# Zorvyn Assignment - Auth Flow (Current Status)
+
+## 1. Project Setup
+1. Install dependencies.
+2. Create a `.env` file in the root.
+3. Start the server with `npm run dev`.
+
+## 2. Environment Variables
+Add these values in `.env`:
+
+PORT=5000
+MONGODB_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+
+Note:
+1. DB connection supports `MONGODB_URI`.
+2. If DB is unreachable, server still starts and logs the DB error.
+
+## 3. Current API Base
+1. Server entry: `App.js`
+2. Health route: `GET /health`
+3. Auth base route: `/auth`
+
+## 4. Auth Flow (Step-by-Step)
+1. Client sends registration request to `POST /auth/register` with `name`, `email`, `password`, and optional `role`.
+2. Server checks whether email already exists.
+3. Password is hashed using `bcryptjs` with salt rounds `10`.
+4. User is saved in MongoDB.
+5. Client sends login request to `POST /auth/login` with `email` and `password`.
+6. Server verifies user exists and compares password hash.
+7. On success, server signs JWT with payload `{ id, role }` and `expiresIn: 1d`.
+8. Token is returned to client.
+
+## 5. Implemented Endpoints
+### Register
+1. Method: `POST`
+2. URL: `/auth/register`
+3. Body:
+
+{
+	"name": "Balram",
+	"email": "balram@example.com",
+	"password": "Pass@123",
+	"role": "viewer"
+}
+
+4. Success response: `201 Created`
+5. Duplicate email response: `400 Bad Request`
+
+### Login
+1. Method: `POST`
+2. URL: `/auth/login`
+3. Body:
+
+{
+	"email": "balram@example.com",
+	"password": "Pass@123"
+}
+
+4. Success response: token JSON
+
+{
+	"token": "<jwt_token>"
+}
+
+5. Invalid email/password: `400 Bad Request`
+
+## 6. JWT Verification Middleware (Ready)
+1. Middleware file validates `Authorization` header.
+2. Expected format: `Bearer <token>`.
+3. On valid token, decoded payload is attached to `req.user`.
+4. On invalid/missing token, response is `401 Unauthorized`.
+
+## 7. Role Middleware (Ready)
+1. `checkRole(...roles)` allows role-based access.
+2. If `req.user.role` is not allowed, response is `403 Forbidden`.
+
+## 8. User Model Rules
+1. Required fields: `name`, `email`, `password`.
+2. `email` is unique.
+3. `role` enum: `viewer`, `analyst`, `admin`.
+4. `isActive` defaults to `true`.
+
+## 9. Current Scope Status
+1. Auth registration and login are implemented.
+2. JWT verify and role check middlewares are implemented.
+3.
 
