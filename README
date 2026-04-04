@@ -1,1 +1,4 @@
 install the enviroment and setup the folder stucture 
+define the data models for user and transaction 
+wirte the db connection logic into config via mongoose ODM
+
