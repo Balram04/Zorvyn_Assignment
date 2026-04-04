@@ -12,10 +12,10 @@ const verifyToken = require('../middlewares/auth.middleware');
 const checkRole = require('../middlewares/role.middleware');
 
 
-// Analyst + Admin can access dashboard
-router.get('/summary', verifyToken, checkRole('admin', 'analyst'), getSummary);
-router.get('/categories', verifyToken, checkRole('admin', 'analyst'), getCategorySummary);
-router.get('/trends', verifyToken, checkRole('admin', 'analyst'), getMonthlyTrends);
-router.get('/recent', verifyToken, checkRole('admin', 'analyst'), getRecentActivity);
+// Viewer + Analyst + Admin can access dashboard
+router.get('/summary', verifyToken, checkRole('admin', 'analyst', 'viewer'), getSummary);
+router.get('/categories', verifyToken, checkRole('admin', 'analyst', 'viewer'), getCategorySummary);
+router.get('/trends', verifyToken, checkRole('admin', 'analyst', 'viewer'), getMonthlyTrends);
+router.get('/recent', verifyToken, checkRole('admin', 'analyst', 'viewer'), getRecentActivity);
 
 module.exports = router;

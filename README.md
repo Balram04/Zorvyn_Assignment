@@ -42,7 +42,7 @@ src/
 
 | Role    | Permissions |
 |---------|-------------|
-| Viewer  | Read own data only |
+| Viewer  | View dashboard and own summary data |
 | Analyst | View records & dashboard |
 | Admin   | Manage all records & users |
 
@@ -85,10 +85,10 @@ Security note:
 | `/api/records` | POST | ✓ | Admin |
 | `/api/records/:id` | PUT | ✓ | Admin |
 | `/api/records/:id` | DELETE | ✓ | Admin |
-| `/api/dashboard/summary` | GET | ✓ | Analyst+ |
-| `/api/dashboard/categories` | GET | ✓ | Analyst+ |
-| `/api/dashboard/trends` | GET | ✓ | Analyst+ |
-| `/api/dashboard/recent` | GET | ✓ | Analyst+ |
+| `/api/dashboard/summary` | GET | ✓ | Viewer+ |
+| `/api/dashboard/categories` | GET | ✓ | Viewer+ |
+| `/api/dashboard/trends` | GET | ✓ | Viewer+ |
+| `/api/dashboard/recent` | GET | ✓ | Viewer+ |
 
 **Full API documentation with JSON examples**: See [API_DOCUMENTATION.md](API_DOCUMENTATION.md)
 

@@ -365,7 +365,7 @@ Authorization: Bearer <admin_token>
 
 ---
 
-## 5. Dashboard Summary (Admin & Analyst)
+## 5. Dashboard Summary (Viewer, Analyst, Admin)
 
 ### 5.1 Get Summary
 ```
