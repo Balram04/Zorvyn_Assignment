@@ -18,13 +18,13 @@ exports.createRecord = async (req, res) => {
 // GET (Role-based behavior)
 exports.getRecords = async (req, res) => {
   try {
-    const { type, category, startDate, endDate } = req.query;
+    const { type, category, startDate, endDate, page = 1, limit = 10 } = req.query;
 
     let filter = {
       isDeleted: false
     };
 
-    // 🔥 IMPORTANT: user-specific data
+    // user-specific data for non-admins
     if (req.user.role !== 'admin') {
       filter.userId = req.user.id;
     }
@@ -38,9 +38,24 @@ exports.getRecords = async (req, res) => {
       if (endDate) filter.date.$lte = new Date(endDate);
     }
 
-    const records = await Record.find(filter).sort({ date: -1 });
+    const pageNumber = Math.max(parseInt(page, 10) || 1, 1);
+    const pageSize = Math.max(parseInt(limit, 10) || 10, 1);
+    const skip = (pageNumber - 1) * pageSize;
 
-    res.json(records);
+    const [records, total] = await Promise.all([
+      Record.find(filter).sort({ date: -1 }).skip(skip).limit(pageSize),
+      Record.countDocuments(filter)
+    ]);
+
+    res.json({
+      data: records,
+      pagination: {
+        page: pageNumber,
+        limit: pageSize,
+        total,
+        pages: Math.ceil(total / pageSize)
+      }
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

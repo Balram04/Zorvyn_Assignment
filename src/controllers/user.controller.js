@@ -13,8 +13,25 @@ const toSafeUser = (user) => ({
 
 exports.getUsers = async (req, res) => {
   try {
-    const users = await User.find().sort({ createdAt: -1 });
-    res.json(users.map(toSafeUser));
+    const { page = 1, limit = 10 } = req.query;
+    const pageNumber = Math.max(parseInt(page, 10) || 1, 1);
+    const pageSize = Math.max(parseInt(limit, 10) || 10, 1);
+    const skip = (pageNumber - 1) * pageSize;
+
+    const [users, total] = await Promise.all([
+      User.find().sort({ createdAt: -1 }).skip(skip).limit(pageSize),
+      User.countDocuments()
+    ]);
+
+    res.json({
+      data: users.map(toSafeUser),
+      pagination: {
+        page: pageNumber,
+        limit: pageSize,
+        total,
+        pages: Math.ceil(total / pageSize)
+      }
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
